@@ -1,5 +1,5 @@
 {
-    "db_url": "mongodb://localhost:27017/foodProject",
+    "db_url": "mongodb://127.0.0.1/foodProject",
     "jwt_token_secret": "food-Project-Key",
     "refresh_jwt_token_secret": "food-Project-Key",
     "nodeMail": {

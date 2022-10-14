@@ -64,7 +64,7 @@ export const signUp_verification_mail = async (mail_data: any) => {
                                                             style="color:#455056; font-size:15px;line-height:24px;text-align:left; margin:0;">
                                                             Hi ${mail_data.name},
                                                             <br><br>
-                                                            Your Verification password For Crave App Sign up is <span style: "font-weight:700, color: #1e1e2d">${mail_data.password}.</span>Please do
+                                                            Your Verification password For Crave App Sign up is <span style: "font-weight:700, color: #1e1e2d">${mail_data.password}. </span>Please do
                                                             not share it anyone.
                                                             <br><br>
                                                             Thanks & Regards<br>
