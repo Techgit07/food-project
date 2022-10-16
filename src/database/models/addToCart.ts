@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 const cartSchema: any = new mongoose.Schema({
     productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
     quantity: { type: Number, default: 0 },
+    foodSize: { type: Number, default: 0, enum: [0, 1, 2] },//----0-medium //----1-large //----2-extraLarge
     total: { type: Number, default: 0 },
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+    orderedBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     isActive: { type: Boolean, default: true }
 }, { timestamps: true })
 
