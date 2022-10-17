@@ -54,7 +54,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         if (response) {
             return res.status(200).send(new apiResponse(200, responseMessage?.updateDataSuccess('product'), { response }, {}));
         }
-        console.log(response);
+        // console.log(response);
         return res.status(403).send(new apiResponse(403, responseMessage?.updateDataError('category'), {}, {}));
     }
     catch (error) {

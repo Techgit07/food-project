@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { foodcategoryModel, userModel } from "../../database";
+import { foodcategoryModel, foodproductModel, userModel } from "../../database";
 import { apiResponse } from "../../common";
 import { responseMessage } from "../../helper";
 import config from 'config'
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+
 
 const ObjectId = require('mongoose').Types.ObjectId;
 const jwt_token_secret = config.get('jwt_token_secret');
@@ -13,8 +14,8 @@ const jwt_token_secret = config.get('jwt_token_secret');
 export const addCategory = async (req: Request, res: Response) => {
     try {
         let user: any = await req.headers.user,
-            body = req.body
-
+            body: any = req.body
+            
         body.createdBy = user?.id
         if (user.userType === "admin") {
             let response: any = await foodcategoryModel.create(body);
@@ -24,7 +25,7 @@ export const addCategory = async (req: Request, res: Response) => {
             return res.status(403).send(new apiResponse(403, responseMessage?.addDataError, {}, {}))
         }
         else {
-            return res.json({ 'msg': "your user type is not admin" })
+            return res.json({ 'message': "your user type is not Admin" })
         }
     } catch (error) {
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
@@ -48,7 +49,6 @@ export const deleteCategory = async (req: Request, res: Response) => {
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
     }
 }
-
 
 export const updateCategory = async (req: Request, res: Response) => {
     let body = req.body,

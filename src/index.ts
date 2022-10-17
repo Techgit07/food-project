@@ -4,14 +4,15 @@
  * @description Server and REST API config
  */
 import * as bodyParser from 'body-parser';
-import express, { Request, Response } from 'express';  
+import express, { Request, Response } from 'express';
 import http from 'http';
 import cors from 'cors'
-import { mongooseConnection} from './database'
+// import multer from 'multer';
+import { mongooseConnection } from './database'
 import * as packageInfo from '../package.json'
 // import config from 'config'
 import { routes } from './Routes';
- 
+
 const app = express();
 // var allow_list = ['https://www.unicornui.com']
 // var corsOptionsDelegate = function (req, callback) {
@@ -24,6 +25,7 @@ const app = express();
 //     callback(null, corsOptions) // callback expects two parameters: error and options
 // }
 
+// app.use(multer);
 app.use(cors())
 app.use(mongooseConnection)
 app.use(bodyParser.json({ limit: '200mb' }))
@@ -34,7 +36,7 @@ const health = (req, res) => {
         message: `grubgrams Server is Running, Server health is green`,
         app: packageInfo.name,
         version: packageInfo.version,
-        description: packageInfo.description,   
+        description: packageInfo.description,
         author: packageInfo.author,
         license: packageInfo.license
     })

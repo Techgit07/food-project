@@ -16,6 +16,9 @@ export const addCart = async (req: Request, res: Response) => {
 
         body.orderedBy = ObjectId(user?._id)
 
+        let product: any = await foodproductModel.findOne({ isActive: true, _id: body.productId })
+        body.total = product.price * body.quantity
+
         let response: any = await addToCart.create(body);
         if (response) {
             return res.status(200).send(new apiResponse(200, responseMessage?.addDataSuccess('cart'), response, {}))
@@ -26,17 +29,52 @@ export const addCart = async (req: Request, res: Response) => {
     }
 }
 
-export const getCart = async (req: Request, res: Response) => {
+export const updateCart = async (req: Request, res: Response) => {
+    let body = req.body,
+        id = body?.id
     try {
-        let body = req.body,
-            user: any = req.headers.user
+        let response = await addToCart.findOneAndUpdate({ _id: ObjectId(id) }, body, { new: true })
 
-        let response: any = await addToCart.find({ orderedBy: ObjectId(user?._id), isActive: true }).populate('productId', '_id categoryId createdBy')
         if (response) {
-            return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('cart'), { response }, {}))
+            return res.status(200).send(new apiResponse(200, responseMessage?.updateDataSuccess('addToCart'), { response }, {}))
+        }
+        console.log(response);
+
+        return res.status(403).send(new apiResponse(403, responseMessage?.updateDataError('addToCart'), null, {}))
+    } catch (error) {
+        return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
+    }
+}
+
+
+// export const getCart = async (req: Request, res: Response) => {
+//     try {
+//         let body = req.body,
+//             user: any = req.headers.user
+
+//         let response: any = await addToCart.find({ orderedBy: ObjectId(user?._id), isActive: true }).populate('productId', '_id categoryId createdBy')
+//         if (response) {
+//             return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('cart'), { response }, {}))
+//         }
+//         else {
+//             return res.status(403).send(new apiResponse(403, responseMessage?.getDataNotFound('cart'), {}, {}))
+//         }
+//     }
+//     catch (error) {
+//         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
+//     }
+// }
+
+export const deleteCart = async (req: Request, res: Response) => {
+    try {
+        let id = await req.params.id
+        // let response = await addToCart.deleteOne({ _id: ObjectId(id) }) //----hardDelete
+        let response = await addToCart.findOneAndUpdate({ _id: ObjectId(id), isActive: true }, { isActive: false }, { new: true })//----softDelete
+        if (response) {
+            return res.status(200).send(new apiResponse(200, responseMessage?.deleteDataSuccess("addToCart"), { response }, {}))
         }
         else {
-            return res.status(403).send(new apiResponse(403, responseMessage?.getDataNotFound('cart'), {}, {}))
+            return res.status(403).send(new apiResponse(403, responseMessage?.deleteDataError, null, {}))
         }
     }
     catch (error) {
@@ -45,47 +83,51 @@ export const getCart = async (req: Request, res: Response) => {
 }
 
 
-// export const getCart = async (req: Request, res: Response) => {
-//     try {
-//         let user = req.headers.user
-//         let response: any = await addToCart.aggregate([
-//             { $match: { isActive: true } },
-//             {
-//                 $lookup: {
-//                     from: "products",
-//                     let: { id: "$_id" },
-//                     pipeline: [
-//                         {
-//                             $match: {
-//                                 $expr: {
-//                                     $and: [
-//                                         { $eq: ['orderedBy', '$$id'] },
-//                                         { $eq: ['isActive', true] }
-//                                     ]
-//                                 }
-//                             }
-//                         },
-//                         {
-//                             $project: {
-//                                 createdBy: 1, _id: 1
-//                             }
-//                         },
-//                     ],
-//                     as: "user_Data"
-//                 }   
-//             },
-//         ])
-//         // console.log(response);
+export const getCart = async (req: Request, res: Response) => {
+    try {
+        let user: any = req.headers.user
+        let response: any = await addToCart.aggregate([
+            { $match: { isActive: true } },
+            {
+                $lookup: {
+                    from: "products",
+                    let: { id: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['orderedBy', '$$id'] },
+                                        { $eq: ['isActive', true] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                createdBy: 1, _id: 1
+                            }
+                        },
+                    ],
+                    as: "user_Data"
+                }
+            },
+            // {
+            //         totalAmount: { $sum: { "total": 1 } },
+            // }
+        ])
+        // console.log(response);
 
-//         if (response) {
-//             return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('cart'), { response }, {}))
-//         }
-//         else {
-//             return res.status(403).send(new apiResponse(403, responseMessage?.getDataNotFound('cart'), {}, {}))
-//         }
+        if (response) {
+            return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('cart'), { response }, {}))
+        }
+        else {
+            return res.status(403).send(new apiResponse(403, responseMessage?.getDataNotFound('cart'), {}, {}))
+        }
 
-//     } catch (error) {
-//         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
-//     }
-// }
+    } catch (error) {
+        console.log('error', error)
+        return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
+    }
+}
 

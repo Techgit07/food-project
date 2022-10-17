@@ -66,3 +66,16 @@ export const login_User = async (req: Request, res: Response) => {
         return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, null, {}));
     }
 }
+
+export const logOut = async (req: Request, res: Response) => {
+    try {
+        let user: any = await req.headers.user
+        let response = await userModel.updateOne({ _id: ObjectId(user?._id), isActive: true }, { $pull: { deviceToken: req.body.logOut } });
+        if (response) {
+            return res.status(200).send(new apiResponse(200, responseMessage?.logout, { response }, {}))
+        }
+    }
+    catch (error) {
+        return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
+    }
+}
