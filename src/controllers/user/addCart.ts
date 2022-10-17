@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addToCart, foodproductModel } from "../../database";
+import { addToCart, foodcategoryModel, foodproductModel } from "../../database";
 import { apiResponse } from "../../common";
 import { responseMessage } from "../../helper";
 import config from 'config'
@@ -72,7 +72,7 @@ export const getCart = async (req: Request, res: Response) => {
 //                         },
 //                     ],
 //                     as: "user_Data"
-//                 }   
+//                 }
 //             },
 //         ])
 //         // console.log(response);
