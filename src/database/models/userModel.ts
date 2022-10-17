@@ -5,6 +5,7 @@ const userSchema: any = new mongoose.Schema({
     email: { type: String, default: null },
     password: { type: String, default: null },
     userType: { type: String, required: true },
+    deviceToken: { type: [{ type: String }], default: [] },
     isActive: { type: Boolean, default: true }
 }, { timestamps: true })
 

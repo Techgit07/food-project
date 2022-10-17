@@ -36,4 +36,6 @@ export const getProductById = async (req: Request, res: Response) => {
     catch (error) {
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
     }
-}    
+}
+
+
