@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addToCart, foodproductModel } from "../../database";
+import { addToCart, foodproductModel, placeorderModel } from "../../database";
 import { apiResponse } from "../../common";
 import { responseMessage } from "../../helper";
 import config from 'config'
@@ -16,7 +16,7 @@ export const addCart = async (req: Request, res: Response) => {
 
         body.orderedBy = ObjectId(user?._id)
 
-        let product: any = await foodproductModel.findOne({ isActive: true, _id: body.productId })
+        let product: any = await foodproductModel.findOne({ isActive: true, _id: body.productId, })
         body.total = product.price * body.quantity
 
         let response: any = await addToCart.create(body);
@@ -33,6 +33,9 @@ export const updateCart = async (req: Request, res: Response) => {
     let body = req.body,
         id = body?.id
     try {
+        let product: any = await foodproductModel.findOne({ isActive: true, _id: body.productId, })
+        body.total = product.price * body.quantity
+
         let response = await addToCart.findOneAndUpdate({ _id: ObjectId(id) }, body, { new: true })
 
         if (response) {
@@ -52,7 +55,8 @@ export const updateCart = async (req: Request, res: Response) => {
 //         let body = req.body,
 //             user: any = req.headers.user
 
-//         let response: any = await addToCart.find({ orderedBy: ObjectId(user?._id), isActive: true }).populate('productId', '_id categoryId createdBy')
+//         let response: any = await addToCart.find({ orderedBy: ObjectId(user?._id), isActive: true }).populate('productId', '_id categoryId')
+
 //         if (response) {
 //             return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('cart'), { response }, {}))
 //         }
@@ -64,6 +68,7 @@ export const updateCart = async (req: Request, res: Response) => {
 //         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
 //     }
 // }
+
 
 export const deleteCart = async (req: Request, res: Response) => {
     try {
@@ -84,50 +89,95 @@ export const deleteCart = async (req: Request, res: Response) => {
 
 
 export const getCart = async (req: Request, res: Response) => {
+    let response: any = {}
     try {
         let user: any = req.headers.user
-        let response: any = await addToCart.aggregate([
+        response = await addToCart.aggregate([
             { $match: { isActive: true } },
             {
                 $lookup: {
-                    from: "products",
-                    let: { id: "$_id" },
+                    from: "users",
+                    let: { id: "$orderedBy" },
                     pipeline: [
                         {
                             $match: {
                                 $expr: {
                                     $and: [
-                                        { $eq: ['orderedBy', '$$id'] },
-                                        { $eq: ['isActive', true] }
+                                        { $eq: ['$_id', '$$id'] },
+                                        { $eq: ['$isActive', true] },
                                     ]
                                 }
                             }
                         },
+                    ],
+                    as: "userData"
+                },
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    let: { id: "$productId" },
+                    pipeline: [
                         {
-                            $project: {
-                                createdBy: 1, _id: 1
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$_id', '$$id'] },
+                                        { $eq: ['$isActive', true] },
+                                    ]
+                                }
                             }
                         },
                     ],
-                    as: "user_Data"
-                }
+                    as: "productData"
+                },
             },
-            // {
-            //         totalAmount: { $sum: { "total": 1 } },
-            // }
+            {
+                $project: {
+                    userData: 1, productData: 1, _id: 1, quantity: 1, foodSize: 1, total: 1, orderedBy: 1, createdAt: 1,
+                }
+            }
         ])
         // console.log(response);
+        let sum = 0
+
+        for (let i = 0; i < response.length; i++) {
+            const element = response[i];
+            sum += element.total
+        }
+        // response = {
+        //     response,
+        //     totalAmount: sum
+        // }
 
         if (response) {
-            return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('cart'), { response }, {}))
+            return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('cart'), { response, totalAmount: sum }, {}))
         }
         else {
             return res.status(403).send(new apiResponse(403, responseMessage?.getDataNotFound('cart'), {}, {}))
         }
-
     } catch (error) {
         console.log('error', error)
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
     }
 }
 
+
+export const placeOrder = async (req: Request, res: Response) => {
+    try {
+        let body = req.body,
+            user: any = req.headers.user
+
+        body.orderedBy = ObjectId(user?.id)
+        if (body.email == user.email) {
+            let response: any = await placeorderModel.create(body)
+            if (response) {
+                return res.status(200).send({ 'message': "Your Order Placed Successfully!" })
+            }
+        }
+        console.log('invalid email');
+        
+    } catch (error) {
+        return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
+    }
+}

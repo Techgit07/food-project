@@ -15,7 +15,7 @@ export const addCategory = async (req: Request, res: Response) => {
     try {
         let user: any = await req.headers.user,
             body: any = req.body
-            
+
         body.createdBy = user?.id
         if (user.userType === "admin") {
             let response: any = await foodcategoryModel.create(body);

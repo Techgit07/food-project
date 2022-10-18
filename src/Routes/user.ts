@@ -14,5 +14,8 @@ routes.get('/getCart', userJWT, userController.getCart);
 routes.put('/updateCart', userJWT, userController.updateCart);
 routes.delete('/deleteCart/:id', userJWT, userController.deleteCart);
 
+//----placeOrderByUser
+routes.post('/placeOrder', userJWT, userController.placeOrder);
+
 
 export const userRouter = routes;
