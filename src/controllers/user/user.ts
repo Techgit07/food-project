@@ -26,7 +26,6 @@ const jwt_token_secret = config.get('jwt_token_secret');
 export const getProduct = async (req: Request, res: Response) => {
     try {
         let user: any = req.headers.user,
-            
             response = await foodproductModel.aggregate([
                 { $match: { isActive: true } },
                 {
@@ -48,33 +47,14 @@ export const getProduct = async (req: Request, res: Response) => {
                         as: "categoryData"
                     },
                 },
-                // {
-                //     $lookup: {
-                //         from: "users",
-                //         let: { id: "$createdBy" },
-                //         pipeline: [
-                //             {
-                //                 $match: {
-                //                     $expr: {
-                //                         $and: [
-                //                             { $eq: ['$_id', '$$id'] },
-                //                             { $eq: ['$isActive', true] },
-                //                         ]
-                //                     }
-                //                 }
-                //             },
-                //         ],
-                //         as: "createdBy"
-                //     },
-                // },
-                // {
-                //     $project: {
-                //         userData: 1, productData: 1, _id: 1, quantity: 1, foodSize: 1, total: 1, orderedBy: 1, createdAt: 1,
-                //     }
-                // }
+                {
+                    $project: {
+                        categoryData: 1, description: 1, price: 1, createdBy: 1, createdAt: 1
+                    }
+                }
             ])
         if (response) {
-            return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('food'), { response }, {}))
+            return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('product'), { response }, {}))
         }
     } catch (error) {
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))

@@ -96,25 +96,6 @@ export const getCart = async (req: Request, res: Response) => {
             { $match: { isActive: true } },
             {
                 $lookup: {
-                    from: "users",
-                    let: { id: "$orderedBy" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        { $eq: ['$_id', '$$id'] },
-                                        { $eq: ['$isActive', true] },
-                                    ]
-                                }
-                            }
-                        },
-                    ],
-                    as: "userData"
-                },
-            },
-            {
-                $lookup: {
                     from: "products",
                     let: { id: "$productId" },
                     pipeline: [
@@ -130,6 +111,25 @@ export const getCart = async (req: Request, res: Response) => {
                         },
                     ],
                     as: "productData"
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    let: { id: "$orderedBy" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$_id', '$$id'] },
+                                        { $eq: ['$isActive', true] },
+                                    ]
+                                }
+                            }
+                        },
+                    ],
+                    as: "userData"
                 },
             },
             {
@@ -169,15 +169,17 @@ export const placeOrder = async (req: Request, res: Response) => {
             user: any = req.headers.user
 
         body.orderedBy = ObjectId(user?.id)
+
         if (body.email == user.email) {
             let response: any = await placeorderModel.create(body)
             if (response) {
                 return res.status(200).send({ 'message': "Your Order Placed Successfully!" })
             }
         }
-        console.log('invalid email');
-        
+        return res.status(403).send(new apiResponse(403, responseMessage?.invalidEmail, null, {}))
+
     } catch (error) {
+        console.log('error', error)
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
     }
 }
