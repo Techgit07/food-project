@@ -6,10 +6,8 @@ import config from 'config'
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-
 const ObjectId = require('mongoose').Types.ObjectId;
 const jwt_token_secret = config.get('jwt_token_secret');
-
 
 export const addCategory = async (req: Request, res: Response) => {
     try {

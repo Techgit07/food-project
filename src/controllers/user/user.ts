@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import { foodcategoryModel, foodproductModel, userModel, } from "../../database";
 import { apiResponse } from "../../common";
 import { responseMessage } from "../../helper";
@@ -24,6 +24,7 @@ const jwt_token_secret = config.get('jwt_token_secret');
 // }
 
 export const getProduct = async (req: Request, res: Response) => {
+    let response: any = {}
     try {
         let user: any = req.headers.user,
             response = await foodproductModel.aggregate([

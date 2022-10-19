@@ -11,7 +11,6 @@ const placeorderSchema: any = new mongoose.Schema({
     city: { type: String, required: true },
     notes: { type: String, required: true },
     orderedBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-    deviceToken: { type: [{ type: String }], default: [] },
     isActive: { type: Boolean, default: true }
 }, { timestamps: true })
 
