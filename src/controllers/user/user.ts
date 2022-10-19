@@ -24,35 +24,32 @@ const jwt_token_secret = config.get('jwt_token_secret');
 // }
 
 export const getProduct = async (req: Request, res: Response) => {
+    let body = req.body,
+        user: any = req.headers.user
+    // body.createdBy = user?.id
     try {
-        let user: any = req.headers.user,
-            response = await foodproductModel.aggregate([
-                { $match: { isActive: true } },
-                {
-                    $lookup: {
-                        from: "categories",
-                        let: { id: "$categoryId" },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: {
-                                        $and: [
-                                            { $eq: ['$_id', '$$id'] },
-                                            { $eq: ['$isActive', true] },
-                                        ]
-                                    }
+        let response = await foodproductModel.aggregate([
+            { $match: { isActive: true } },
+            {
+                $lookup: {
+                    from: "categories",
+                    let: { id: "$categoryId" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$_id', '$$id'] },
+                                        { $eq: ['$isActive', true] },
+                                    ]
                                 }
-                            },
-                        ],
-                        as: "categoryData"
-                    },
+                            }
+                        },
+                    ],
+                    as: "categoryData"
                 },
-                {
-                    $project: {
-                        categoryData: 1, description: 1, price: 1, createdBy: 1, createdAt: 1
-                    }
-                }
-            ])
+            },
+        ])
         if (response) {
             return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('product'), { response }, {}))
         }

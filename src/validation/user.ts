@@ -7,7 +7,7 @@ import { Request, Response } from 'express'
 export const addCart = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
         productId: Joi.string().required().error(new Error('productId is required!')),
-        quantity: Joi.string().required().error(new Error('quantity is required!')),
+        quantity: Joi.string().required().error(new Error('minimum 1 quantity is required!')),
         foodSize: Joi.string().required().error(new Error('foodSize is required!')),
     })
     schema.validateAsync(req.body).then(result => {
@@ -22,7 +22,7 @@ export const updateCart = async (req: Request, res: Response, next: any) => {
         productId: Joi.string().required().error(new Error('productId is required!')),
         quantity: Joi.string().required().error(new Error('quantity is required!')),
         foodSize: Joi.string().required().error(new Error('foodSize is required!')),
-        Id: Joi.string().required().error(new Error('cartId is required!')),
+        id: Joi.string().required().error(new Error('cartId is required!')),
     })
     schema.validateAsync(req.body).then(result => {
         return next()

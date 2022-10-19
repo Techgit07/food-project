@@ -16,6 +16,7 @@ export const addCart = async (req: Request, res: Response) => {
 
         body.orderedBy = ObjectId(user?._id)
 
+        // if (user.userType == "user") {
         let product: any = await foodproductModel.findOne({ isActive: true, _id: body.productId, })
         body.total = product.price * body.quantity
 
@@ -23,6 +24,7 @@ export const addCart = async (req: Request, res: Response) => {
         if (response) {
             return res.status(200).send(new apiResponse(200, responseMessage?.addDataSuccess('cart'), response, {}))
         }
+        // }
     }
     catch (error) {
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
@@ -90,10 +92,17 @@ export const deleteCart = async (req: Request, res: Response) => {
 
 export const getCart = async (req: Request, res: Response) => {
     let response: any = {}
+    let user: any = req.headers.user,
+        body = req.body
+
     try {
-        let user: any = req.headers.user
-        response = await addToCart.aggregate([
-            { $match: { isActive: true } },
+        let response = await addToCart.aggregate([
+            {
+                $match: {
+                    user: body.orderedBy,
+                    isActive: true
+                }
+            },
             {
                 $lookup: {
                     from: "products",
@@ -132,11 +141,11 @@ export const getCart = async (req: Request, res: Response) => {
                     as: "userData"
                 },
             },
-            {
-                $project: {
-                    userData: 1, productData: 1, _id: 1, quantity: 1, foodSize: 1, total: 1, orderedBy: 1, createdAt: 1,
-                }
-            }
+            // {
+            //     $project: {
+            //         userData: 1, productData: 1, _id: 1, quantity: 1, foodSize: 1, total: 1, orderedBy: 1, createdAt: 1,
+            //     }
+            // }
         ])
         // console.log(response);
         let sum = 0
