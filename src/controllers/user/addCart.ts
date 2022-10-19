@@ -26,7 +26,7 @@ export const addCart = async (req: Request, res: Response) => {
     }
     catch (error) {
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
-    }   
+    }
 }
 
 export const updateCart = async (req: Request, res: Response) => {
@@ -176,9 +176,10 @@ export const placeOrder = async (req: Request, res: Response) => {
                 return res.status(200).send({ 'message': "Your Order Placed Successfully!" })
             }
         }
-        return res.status(403).send(new apiResponse(403, responseMessage?.invalidEmail, {}, {}))
+        return res.status(403).send(new apiResponse(403, responseMessage?.invalidEmail, null, {}))
 
     } catch (error) {
+        console.log('error', error)
         return res.status(500).send(new apiResponse(500, responseMessage?.internalServerError, {}, {}))
     }
 }

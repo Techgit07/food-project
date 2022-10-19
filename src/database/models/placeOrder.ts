@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 
 const placeorderSchema: any = new mongoose.Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    firstName: { type: String, default: null },
+    lastName: { type: String, default: null },
     companyName: { type: String, default: null },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
-    address: { type: String, required: true },
-    postalCode: { type: String, required: true },
-    city: { type: String, required: true },
-    notes: { type: String, required: true },
+    email: { type: String, default: null },
+    phone: { type: String, default: null },
+    address: { type: String, default: null },
+    postalCode: { type: String, default: null },
+    city: { type: String, default: null },
+    notes: { type: String, default: null },
     orderedBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     isActive: { type: Boolean, default: true }
 }, { timestamps: true })
