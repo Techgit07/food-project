@@ -24,55 +24,55 @@ const jwt_token_secret = config.get('jwt_token_secret');
 // }
 
 export const getProduct = async (req: Request, res: Response) => {
-    let response: any = {}
     try {
-        let user: any = req.headers.user
-        response = await foodproductModel.aggregate([
-            { $match: { isActive: true } },
-            {
-                $lookup: {
-                    from: "categories",
-                    let: { id: "$categoryId" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        { $eq: ['$_id', '$$id'] },
-                                        { $eq: ['$isActive', true] },
-                                    ]
+        let user: any = req.headers.user,
+            
+            response = await foodproductModel.aggregate([
+                { $match: { isActive: true } },
+                {
+                    $lookup: {
+                        from: "categories",
+                        let: { id: "$categoryId" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ['$_id', '$$id'] },
+                                            { $eq: ['$isActive', true] },
+                                        ]
+                                    }
                                 }
-                            }
-                        },
-                    ],
-                    as: "categoryData"
+                            },
+                        ],
+                        as: "categoryData"
+                    },
                 },
-            },
-            // {
-            //     $lookup: {
-            //         from: "users",
-            //         let: { id: "$createdBy" },
-            //         pipeline: [
-            //             {
-            //                 $match: {
-            //                     $expr: {
-            //                         $and: [
-            //                             { $eq: ['$_id', '$$id'] },
-            //                             { $eq: ['$isActive', true] },
-            //                         ]
-            //                     }
-            //                 }
-            //             },
-            //         ],
-            //         as: "createdBy"
-            //     },
-            // },
-            // {
-            //     $project: {
-            //         userData: 1, productData: 1, _id: 1, quantity: 1, foodSize: 1, total: 1, orderedBy: 1, createdAt: 1,
-            //     }
-            // }
-        ])
+                // {
+                //     $lookup: {
+                //         from: "users",
+                //         let: { id: "$createdBy" },
+                //         pipeline: [
+                //             {
+                //                 $match: {
+                //                     $expr: {
+                //                         $and: [
+                //                             { $eq: ['$_id', '$$id'] },
+                //                             { $eq: ['$isActive', true] },
+                //                         ]
+                //                     }
+                //                 }
+                //             },
+                //         ],
+                //         as: "createdBy"
+                //     },
+                // },
+                // {
+                //     $project: {
+                //         userData: 1, productData: 1, _id: 1, quantity: 1, foodSize: 1, total: 1, orderedBy: 1, createdAt: 1,
+                //     }
+                // }
+            ])
         if (response) {
             return res.status(200).send(new apiResponse(200, responseMessage?.getDataSuccess('food'), { response }, {}))
         }
