@@ -30,13 +30,4 @@ export const login_User = async (req: Request, res: Response, next: any) => {
     });
 }
 
-export const logOut = (req: Request, res: Response, next: any) => {
-    const schema = Joi.object({
-        deviceToken: Joi.string().required().error(new Error('deviceToken is required!')),
-    })
-    schema.validateAsync(req.body).then(result => {
-        return next()
-    }).catch(error => {
-        return res.status(400).send(new apiResponse(400, error.message, {}, {}))
-    })
-}
+

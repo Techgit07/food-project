@@ -28,6 +28,7 @@ export const getProduct = async (req: Request, res: Response) => {
         user: any = req.headers.user
     // body.createdBy = user?.id
     try {
+        let user: any = req.headers.user
         let response = await foodproductModel.aggregate([
             { $match: { isActive: true } },
             {

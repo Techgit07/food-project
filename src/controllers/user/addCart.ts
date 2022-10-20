@@ -93,13 +93,13 @@ export const deleteCart = async (req: Request, res: Response) => {
 export const getCart = async (req: Request, res: Response) => {
     let response: any = {}
     let user: any = req.headers.user,
-        body = req.body
+
 
     try {
         let response = await addToCart.aggregate([
             {
                 $match: {
-                    user: body.orderedBy,
+                    user: user._id,
                     isActive: true
                 }
             },
