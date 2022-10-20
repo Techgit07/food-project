@@ -21,7 +21,7 @@ export const addCategory = async (req: Request, res: Response) => {
                 return res.status(200).send(new apiResponse(200, responseMessage?.addDataSuccess('category'), { response }, {}))
             }
             return res.status(403).send(new apiResponse(403, responseMessage?.addDataError, {}, {}))
-        }
+        }   
         else {
             return res.json({ 'message': "your user type is not Admin" })
         }
