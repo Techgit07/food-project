@@ -20,11 +20,7 @@ export const update_Category = async (req: Request, res: Response, next: any) =>
     const schema = Joi.object({
         foodName: Joi.string().alphanum().required().error(new Error('foodName is required!')),
         image: Joi.string().required().error(new Error('image is required!')),
-<<<<<<< Updated upstream
         id: Joi.string().required().error(new Error('categoryId is required!'))
-=======
-        id: Joi.string().required().error(new Error('categoryId is required!')),
->>>>>>> Stashed changes
     })
     schema.validateAsync(req.body).then(result => {
         return next()
