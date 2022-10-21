@@ -51,6 +51,7 @@ export const responseMessage = {
     getDataSuccess: (message: string): any => { return `${message[0].toUpperCase() + message.slice(1).toLowerCase()} successfully retrieved!` },
     addDataSuccess: (message: string): any => { return `${message[0].toUpperCase() + message.slice(1).toLowerCase()} successfully added!` },
     getDataNotFound: (message: string): any => { return `We couldn't find the ${message.toLowerCase()} you requested!` },
+    addDataSuccessMail: (message: string): any => { return `${message[0].toUpperCase() + message.slice(1).toLowerCase()} successfully added! Please Check Your Mail` },
     updateDataSuccess: (message: string): any => { return `${message[0].toUpperCase() + message.slice(1).toLowerCase()} has been successfully updated!` },
     updateDataError: (message: string): any => { return `${message[0].toUpperCase() + message.slice(1).toLowerCase()} updating time getting an error!` },
     deleteDataSuccess: (message: string): any => { return `Your ${message.toLowerCase()} has been successfully deleted!` },

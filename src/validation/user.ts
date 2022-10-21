@@ -33,8 +33,8 @@ export const updateCart = async (req: Request, res: Response, next: any) => {
 
 export const placeOrder = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
-        firstName: Joi.string().alphanum().required().error(new Error('firstname is required!')),
-        lastName: Joi.string().alphanum().required().error(new Error('lastname is required!')),
+        firstName: Joi.string().required().error(new Error('firstname is required!')),
+        lastName: Joi.string().required().error(new Error('lastname is required!')),
         email: Joi.string().email().required().error(new Error('email is required!')),
         phone: Joi.string().required().error(new Error('phone is required!')),
         address: Joi.string().required().error(new Error('address is required!')),

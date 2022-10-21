@@ -14,14 +14,15 @@ export const addCategory = async (req: Request, res: Response) => {
         let user: any = await req.headers.user,
             body: any = req.body
 
-        body.createdBy = user?.id
+        body.createdBy = user?._id
+
         if (user.userType === "admin") {
             let response: any = await foodcategoryModel.create(body);
             if (response) {
                 return res.status(200).send(new apiResponse(200, responseMessage?.addDataSuccess('category'), { response }, {}))
             }
             return res.status(403).send(new apiResponse(403, responseMessage?.addDataError, {}, {}))
-        }   
+        }
         else {
             return res.json({ 'message': "your user type is not Admin" })
         }
@@ -67,11 +68,10 @@ export const updateCategory = async (req: Request, res: Response) => {
 export const getCategory = async (req: Request, res: Response) => {
     try {
         let response = await foodcategoryModel.find({ isActive: true })
-        if (response) {
-            return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("category"), response, {}))
-        } else {
+        if (!response) {
             return res.status(404).json(new apiResponse(404, responseMessage?.getDataNotFound("category"), null, {}))
         }
+        return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("category"), response, {}))
     } catch (error) {
         console.log("error", error);
         return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, null, {}))

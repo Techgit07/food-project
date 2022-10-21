@@ -6,7 +6,7 @@ import { Request, Response } from 'express'
 
 export const add_Category = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
-        foodName: Joi.string().alphanum().required().error(new Error('foodName is required!')),
+        foodName: Joi.string().required().error(new Error('foodName is required!')),
         image: Joi.string().required().error(new Error('image is required!')),
     })
     schema.validateAsync(req.body).then(result => {
@@ -18,7 +18,7 @@ export const add_Category = async (req: Request, res: Response, next: any) => {
 
 export const update_Category = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
-        foodName: Joi.string().alphanum().required().error(new Error('foodName is required!')),
+        foodName: Joi.string().required().error(new Error('foodName is required!')),
         image: Joi.string().required().error(new Error('image is required!')),
         id: Joi.string().required().error(new Error('categoryId is required!'))
     })
@@ -31,7 +31,7 @@ export const update_Category = async (req: Request, res: Response, next: any) =>
 
 export const add_Product = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
-        productName: Joi.string().alphanum().required().error(new Error('productName is required!')),
+        productName: Joi.string().required().error(new Error('productName is required!')),
         description: Joi.string().required().error(new Error('description is required!')),
         // foodSize: Joi.string().required().error(new Error('description is required!')),
         price: Joi.string().required().error(new Error('price is required!')),
@@ -46,7 +46,7 @@ export const add_Product = async (req: Request, res: Response, next: any) => {
 
 export const update_Product = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
-        productName: Joi.string().alphanum().required().error(new Error('productName is required!')),
+        productName: Joi.string().required().error(new Error('productName is required!')),
         description: Joi.string().required().error(new Error('description is required!')),
         price: Joi.string().required().error(new Error('price is required!')),
         id: Joi.string().required().error(new Error('productId is required!'))

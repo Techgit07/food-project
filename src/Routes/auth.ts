@@ -9,6 +9,7 @@ const routes = express.Router();
 routes.post('/register_User', validation.register_User, authController.register_User);
 routes.post('/login_User', validation.login_User, authController.login_User);
 routes.post('/logOut', userJWT, authController.logOut);
+// routes.post('/forgot_Password', userJWT, authController.forgot_Password);
 
 
 export const authRouter = routes;

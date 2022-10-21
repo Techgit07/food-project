@@ -9,7 +9,7 @@ import os from 'os'
 //         console.log(`server started on port ${port}`);
 //     });
 // }
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 server.listen(port, () => {
     console.log(`server started on port ${port}`);
 });

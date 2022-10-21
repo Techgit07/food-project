@@ -33,15 +33,15 @@ app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }))
 console.log(process.env.NODE_ENV);
 const health = (req, res) => {
     return res.status(200).json({
-        message: `grubgrams Server is Running, Server health is green`,
+        message: `foodCrave Server is Running, Server health is green`,
         app: packageInfo.name,
         version: packageInfo.version,
         description: packageInfo.description,
-        author: packageInfo.author,
+        author: packageInfo.author, 
         license: packageInfo.license
     })
 }
-const bad_gateway = (req, res) => { return res.status(502).json({ status: 502, message: "grubgrams Backend API Bad Gateway" }) }
+const bad_gateway = (req, res) => { return res.status(502).json({ status: 502, message: "foodCrave Backend API Bad Gateway" }) }
 
 app.get('/', health);
 app.get('/health', health);
