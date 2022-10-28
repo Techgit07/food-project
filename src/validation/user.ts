@@ -29,7 +29,7 @@ export const updateCart = async (req: Request, res: Response, next: any) => {
     }).catch(error => {
         return res.status(400).send(new apiResponse(400, error.message, {}, {}))
     });
-}
+} 
 
 export const placeOrder = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
