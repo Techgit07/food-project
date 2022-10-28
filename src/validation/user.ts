@@ -36,11 +36,10 @@ export const placeOrder = async (req: Request, res: Response, next: any) => {
         firstName: Joi.string().required().error(new Error('firstname is required!')),
         lastName: Joi.string().required().error(new Error('lastname is required!')),
         email: Joi.string().email().required().error(new Error('email is required!')),
-        phone: Joi.string().required().error(new Error('phone is required!')),
+        phone: Joi.string().required().error(new Error('phone number is required!')),
         address: Joi.string().required().error(new Error('address is required!')),
         postalCode: Joi.string().required().error(new Error('postalcode is required!')),
         city: Joi.string().required().error(new Error('city is required!')),
-
     })
     schema.validateAsync(req.body).then(result => {
         return next()

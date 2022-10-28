@@ -10,6 +10,7 @@ import cors from 'cors'
 // import multer from 'multer';
 import { mongooseConnection } from './database'
 import * as packageInfo from '../package.json'
+
 // import config from 'config'
 import { routes } from './Routes';
 
@@ -37,7 +38,7 @@ const health = (req, res) => {
         app: packageInfo.name,
         version: packageInfo.version,
         description: packageInfo.description,
-        author: packageInfo.author, 
+        author: packageInfo.author,
         license: packageInfo.license
     })
 }
